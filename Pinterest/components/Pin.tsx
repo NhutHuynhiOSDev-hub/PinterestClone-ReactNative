@@ -26,22 +26,23 @@ const Pin = (props) => {
           <AntDesign name="hearto" size={24} color="black" />
         </Pressable>
       </View>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title} numberOfLines={2}>{title}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    margin: 10,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-
   pin: {
+    padding: 4,
     width: "100%",
   },
-
+  title: {
+    margin: 5,
+    fontSize: 16,
+    lineHeight: 22,
+    color: "#181818",
+    fontWeight: "600",
+  },
   image: {
     width: "100%",
     borderRadius: 25,
