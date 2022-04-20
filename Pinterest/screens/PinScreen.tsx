@@ -1,5 +1,12 @@
 import { useEffect } from "react";
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import pins from "../assets/data/pins";
 import { useState } from "react";
 import {
@@ -7,14 +14,25 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PinScreen = () => {
-  const pin = pins[1];
   const [ration, setRation] = useState(1);
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const route = useRoute();
 
-  const goBack = () => {};
+  const pinID = route.params?.id;
+  const pin = pins.find((item) => item.id === pinID);
+
+  const goBack = () => {
+    navigation.goBack();
+  };
+
+  if (!pin) {
+    return <Text>Pin not found!!</Text>;
+  }
 
   useEffect(() => {
     if (pin.image) {
