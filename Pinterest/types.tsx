@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-declare global {
+declare global { 
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
   }
