@@ -1,4 +1,9 @@
-import { ScrollView, View, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import Pin from "./Pin";
 
 interface IMasonryList {
@@ -10,7 +15,8 @@ interface IMasonryList {
 }
 
 const MasonryList = ({ pins }: IMasonryList) => {
-  const numRows = 2;
+  const width = useWindowDimensions().width;
+  const numRows = Math.ceil(width / 350);
 
   return (
     <ScrollView contentContainerStyle={{ width: "100%" }}>
