@@ -88,28 +88,29 @@ function BottomTabNavigator() {
       initialRouteName="HomeScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarShowLabel: false,
       }}
     >
       <BottomTab.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={({ navigation }: RootTabScreenProps<"HomeScreen">) => ({
-          title: "Home Screen",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        })}
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
       />
       <BottomTab.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
-          title: "Profile Screen",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Profile",
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </BottomTab.Navigator>
   );
 }
- 
+
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
