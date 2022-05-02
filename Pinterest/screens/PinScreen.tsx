@@ -16,6 +16,11 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { NhostClient } from "@nhost/react";
+
+const nhost = new NhostClient({
+  backendUrl: "https://lrsmfbjvjgapfxadtrfu.nhost.run",
+});
 
 const PinScreen = () => {
   const [ration, setRation] = useState(1);
