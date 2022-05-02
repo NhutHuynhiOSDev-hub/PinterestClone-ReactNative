@@ -13,6 +13,8 @@ export default function CreatePinScreen() {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
 
+  const onSubmit = () => {};
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -40,6 +42,7 @@ export default function CreatePinScreen() {
             value={title}
             onChangeText={setTitle}
           />
+          <Button title="Submit" onPress={onsubmit } />
         </>
       )}
     </View>
