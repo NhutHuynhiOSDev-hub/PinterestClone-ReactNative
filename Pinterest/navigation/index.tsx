@@ -27,6 +27,7 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import PinScreen from "../screens/PinScreen";
+import CreatePinScreen from "../screens/CreatePinScreen";
 
 export default function Navigation({
   colorScheme,
@@ -85,14 +86,14 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
         tabBarShowLabel: false,
       }}
     >
       <BottomTab.Screen
-        name="HomeScreen"
+        name="Home"
         component={HomeScreen}
         options={{
           title: "Home",
@@ -100,7 +101,15 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="ProfileScreen"
+        name="CreatePin"
+        component={CreatePinScreen}
+        options={{
+          title: "Create Pin",
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Profile"
         component={ProfileScreen}
         options={{
           title: "Profile",
