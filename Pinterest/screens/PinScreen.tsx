@@ -6,8 +6,8 @@ import {
   Text,
   Pressable,
   ScrollView,
+  Alert,
 } from "react-native";
-import pins from "../assets/data/pins";
 import { useState } from "react";
 import {
   SafeAreaView,
@@ -16,36 +16,63 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { NhostClient } from "@nhost/react";
-
-const nhost = new NhostClient({
-  backendUrl: "https://lrsmfbjvjgapfxadtrfu.nhost.run",
-});
+import { useNhostClient } from "@nhost/react";
 
 const PinScreen = () => {
   const [ration, setRation] = useState(1);
-  const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
-  const route = useRoute();
+  const [pin, setPin] = useState<any>(null);
 
-  const pinID = route.params?.id;
-  const pin = pins.find((item) => item.id === pinID);
+  const route = useRoute();
+  const nhost = useNhostClient();
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
+  const GET_PIN_QUEY = `
+    query MyQuery ($id: uuid!){
+      pins_by_pk(id: $id) {
+          create_at
+          id
+          image
+          title
+          user {
+            avatarUrl
+            displayName
+            id
+          }
+        }
+      }`;
+
+  const pinId = route.params?.id;
+
+  const fecthPin = async () => {
+    const response = await nhost.graphql.request(GET_PIN_QUEY, { id: pinId });
+    console.log("Pin Details", response);
+    if (response.error) {
+      Alert.alert("Error fetching the pin");
+    } else {
+      setPin(response.data.pins_by_pk);
+    }
+  };
+
+  useEffect(() => {
+    fecthPin();
+  }, []);
+
+  useEffect(() => {
+    if (pin?.image) {
+      Image.getSize(pin.image, (width, height) => {
+        setRation(width / height);
+      });
+    }
+  }, [pin]);
 
   const goBack = () => {
     navigation.goBack();
   };
 
   if (!pin) {
-    return <Text>Pin not found!!</Text>;
+    return <Text style={styles.title}> PIN NOT FOUND</Text>;
   }
-
-  useEffect(() => {
-    if (pin.image) {
-      Image.getSize(pin.image, (width, height) => {
-        setRation(width / height);
-      });
-    }
-  }, [pin.image]);
 
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>

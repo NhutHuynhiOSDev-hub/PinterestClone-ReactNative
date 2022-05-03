@@ -11,11 +11,14 @@ export default function HomeScreen() {
     const response = await nhost.graphql.request(
       `query MyQuery {
         pins {
-          create_at
-          id
-          image
           title
-          user_id
+          image
+          id
+          user {
+            avatarUrl
+            id
+            displayName
+          }
         }
       }`
     );
