@@ -1,11 +1,18 @@
 import { Image, View, Text, StyleSheet, ScrollView } from "react-native";
 import pins from "../assets/data/pins";
 import MasonryList from "../components/MasonryList";
+import { Platform } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import { Entypo, Feather } from "@expo/vector-icons";
 
 export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+        <View style={styles.icons}>
+          <Feather style={styles.icon} size={24} name="log-out" />
+          <Entypo style={styles.icon} size={24} name="dots-three-horizontal" />
+        </View>
         <Image
           style={styles.image}
           source={{
@@ -23,6 +30,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    backgroundColor: "white",
   },
   title: {
     marginTop: 20,
@@ -32,7 +40,7 @@ const styles = StyleSheet.create({
   subTitle: {
     color: "#181818",
     fontWeight: "600",
-    marginVertical: 10,
+    marginTop: 10,
   },
   image: {
     width: 200,
@@ -41,6 +49,14 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    paddingVertical: 50,
+    marginVertical: 20,
+  },
+  icons: {
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    padding: 10,
+  },
+  icon: {
+    paddingHorizontal: 10,
   },
 });

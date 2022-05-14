@@ -56,7 +56,7 @@ function RootNavigator() {
   }
   return (
     <Stack.Navigator>
-      {!isAuthenticated ? (
+      {isAuthenticated ? (
         <Stack.Screen
           name="Auth"
           component={AuthStackNavigator}
