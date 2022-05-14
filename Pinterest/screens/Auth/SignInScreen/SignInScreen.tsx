@@ -5,23 +5,33 @@ import {
   useWindowDimensions,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import Logo from "./logo.png";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { useNhostClient } from "@nhost/react";
 
 const SignInScreen = () => {
+  const nhost = useNhostClient();
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSignInPressed = () => {
-    console.log(data);
-    // validate user
-    // navigation.navigate('Home');
+  const onSignInPressed = async () => {
+    const response = await nhost.auth.signIn({
+      email,
+      password,
+    });
+
+    if (response.error) {
+      Alert.alert("Error Sign In", response.error.message);
+    } else {
+      console.log("Login Success", response);
+    }
   };
 
   const onForgotPasswordPressed = () => {
