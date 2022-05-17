@@ -22,18 +22,22 @@ const SignUpScreen = () => {
   const nhost = useNhostClient();
 
   const onRegisterPressed = async () => {
-    const response = await nhost.auth.signUp({
+
+    const result = await nhost.auth.signUp({
       email,
       password,
       options: {
         displayName: name,
       },
     });
-    if (response.error) {
-      Alert.alert("Error Signing up", response.error.message);
+
+    if (result.error) {
+      Alert.alert("Error signing up", result.error.message);
     } else {
       navigation.navigate("Sign in");
     }
+
+    console.log(result);
   };
 
   const onSignInPress = () => {

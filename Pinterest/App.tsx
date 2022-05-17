@@ -5,9 +5,12 @@ import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { NhostClient, NhostReactProvider } from "@nhost/react";
+import * as SecureStore from "expo-secure-store";
 
 const nhost = new NhostClient({
   backendUrl: "https://lrsmfbjvjgapfxadtrfu.nhost.run",
+  clientStorageType: "expo-secure-storage",
+  clientStorage: SecureStore,
 });
 
 export default function App() {

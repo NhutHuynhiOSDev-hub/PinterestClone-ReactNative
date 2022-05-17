@@ -12,7 +12,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ActivityIndicator, ColorSchemeName } from "react-native";
+import { ActivityIndicator, ColorSchemeName, Text, View } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -52,11 +52,12 @@ function RootNavigator() {
   const { isLoading, isAuthenticated } = useAuthenticationStatus();
 
   if (isLoading) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator style={{ flex: 1, justifyContent: "center" }} />;
   }
+
   return (
     <Stack.Navigator>
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <Stack.Screen
           name="Auth"
           component={AuthStackNavigator}
@@ -74,6 +75,7 @@ function RootNavigator() {
             component={PinScreen}
             options={{ headerShown: false }}
           />
+
           <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}

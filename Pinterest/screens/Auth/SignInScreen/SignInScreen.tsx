@@ -22,16 +22,14 @@ const SignInScreen = () => {
   const [password, setPassword] = useState("");
 
   const onSignInPressed = async () => {
-    const response = await nhost.auth.signIn({
+    const result = await nhost.auth.signIn({
       email,
       password,
     });
-
-    if (response.error) {
-      Alert.alert("Error Sign In", response.error.message);
-    } else {
-      console.log("Login Success", response);
+    if (result.error) {
+      Alert.alert("Error", result.error.message);
     }
+    console.log(result);
   };
 
   const onForgotPasswordPressed = () => {
