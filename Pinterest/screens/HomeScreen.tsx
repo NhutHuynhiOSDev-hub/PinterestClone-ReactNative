@@ -16,7 +16,6 @@ export default function HomeScreen() {
           id
           user {
             avatarUrl
-            id
             displayName
           }
         }
@@ -27,7 +26,6 @@ export default function HomeScreen() {
     } else {
       setPins(response.data.pins);
     }
-    console.log(response);
   };
 
   useEffect(() => {
