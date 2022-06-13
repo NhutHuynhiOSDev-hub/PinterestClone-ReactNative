@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNhostClient } from "@nhost/react";
@@ -26,24 +27,47 @@ mutation MyMutation($image: String!, $title: String) {
 `;
 
 export default function CreatePinScreen() {
-  const [image, setImage] = useState(null);
+  const [imageUri, setImageUri] = useState<null | string>(null);
   const [title, setTitle] = useState("");
 
   const nhost = useNhostClient();
   const navigator = useNavigation();
 
-  const onSubmit = async () => {
-    const result = await nhost.graphql.request(CREATE_PIN_MUTATION, {
-      title,
-      image:
-        "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/7.jpeg"
-    });
-    console.log(result);
-    if (result.error) {
-      Alert.alert("Error creating the post", result.error.message);
-    } else {
-      navigator.goBack();
+  const onUploadImage = async () => {
+    if (!imageUri) {
+      return;
     }
+
+    const parts = imageUri.split("/");
+    const name = parts[parts.length - 1];
+    const nameParts = name.split(".");
+    const extension = nameParts[name.length - 1];
+    const uri =
+      Platform.OS === "ios" ? imageUri.replace("file://", "") : imageUri;
+
+    const results = await nhost.storage.upload({
+      file: {
+        name,
+        type: `image/${extension}`,
+        uri,
+      },
+    });
+    console.log(results);
+  };
+
+  const onSubmit = async () => {
+    onUploadImage();
+    // const result = await nhost.graphql.request(CREATE_PIN_MUTATION, {
+    //   title,
+    //   image:
+    //     "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/7.jpeg",
+    // });
+    // console.log(result);
+    // if (result.error) {
+    //   Alert.alert("Error creating the post", result.error.message);
+    // } else {
+    //   navigator.goBack();
+    // }
   };
 
   const pickImage = async () => {
@@ -55,16 +79,16 @@ export default function CreatePinScreen() {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImageUri(result.uri);
     }
   };
 
   return (
     <View style={styles.container}>
       <Button title="Upload you Pin" onPress={pickImage} />
-      {image && (
+      {imageUri && (
         <>
-          <Image source={{ uri: image }} style={styles.image} />
+          <Image source={{ uri: imageUri }} style={styles.image} />
           <TextInput
             style={styles.textInput}
             placeholder="Title..."
