@@ -65,7 +65,7 @@ export default function ProfileScreen() {
         <Image
           style={styles.image}
           source={{
-            uri: user.avatarUrl,
+            uri: "https://i.pinimg.com/236x/05/49/9b/05499b2fc2bb3512e4dae7bf7b89eaaf.jpg",
           }}
         />
         <Text style={styles.title}>{user.displayName}</Text>
