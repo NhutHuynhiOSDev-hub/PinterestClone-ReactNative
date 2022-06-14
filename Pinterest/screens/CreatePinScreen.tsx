@@ -35,7 +35,11 @@ export default function CreatePinScreen() {
 
   const onUploadImage = async () => {
     if (!imageUri) {
-      return;
+      return {
+        error: {
+          message: "No image selected",
+        },
+      };
     }
 
     const parts = imageUri.split("/");
@@ -52,22 +56,27 @@ export default function CreatePinScreen() {
         uri,
       },
     });
-    console.log(results);
+    return results;
   };
 
   const onSubmit = async () => {
-    onUploadImage();
-    // const result = await nhost.graphql.request(CREATE_PIN_MUTATION, {
-    //   title,
-    //   image:
-    //     "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/pinterest/7.jpeg",
-    // });
-    // console.log(result);
-    // if (result.error) {
-    //   Alert.alert("Error creating the post", result.error.message);
-    // } else {
-    //   navigator.goBack();
-    // }
+    const uploadResults = await onUploadImage();
+
+    if (uploadResults.error) {
+      Alert.alert("Error uploading the image", uploadResults.error.message);
+      return;
+    }
+
+    const result = await nhost.graphql.request(CREATE_PIN_MUTATION, {
+      title,
+      image: uploadResults.fileMetadata.id,
+    });
+    console.log(result);
+    if (result.error) {
+      Alert.alert("Error creating the post", result.error.message);
+    } else {
+      navigator.goBack();
+    }
   };
 
   const pickImage = async () => {

@@ -21,6 +21,7 @@ import { useNhostClient } from "@nhost/react";
 const PinScreen = () => {
   const [ration, setRation] = useState(1);
   const [pin, setPin] = useState<any>(null);
+  const [imageUri, setImageUri] = useState("");
 
   const route = useRoute();
   const nhost = useNhostClient();
@@ -44,6 +45,32 @@ const PinScreen = () => {
         }
       }`;
 
+  useEffect(() => {
+    fecthPin();
+  }, [pinId]);
+
+  useEffect(() => {
+    fetchImage();
+  }, [pin]);
+
+  useEffect(() => {
+    if (imageUri) {
+      Image.getSize(imageUri, (width, height) => {
+        setRation(width / height);
+      });
+    }
+  }, [imageUri]);
+
+  const fetchImage = async () => {
+    const results = await nhost.storage.getPresignedUrl({
+      fileId: pin.image,
+    });
+    console.log(results);
+    if (results.presignedUrl?.url) {
+      setImageUri(results.presignedUrl?.url);
+    }
+  };
+
   const fecthPin = async () => {
     const response = await nhost.graphql.request(GET_PIN_QUEY, { id: pinId });
     console.log("Pin Details", response);
@@ -53,18 +80,6 @@ const PinScreen = () => {
       setPin(response.data.pins_by_pk);
     }
   };
-
-  useEffect(() => {
-    fecthPin();
-  }, []);
-
-  useEffect(() => {
-    if (pin?.image) {
-      Image.getSize(pin.image, (width, height) => {
-        setRation(width / height);
-      });
-    }
-  }, [pin]);
 
   const goBack = () => {
     navigation.goBack();
@@ -79,7 +94,7 @@ const PinScreen = () => {
       <StatusBar style="light" />
       <View style={styles.root}>
         <Image
-          source={{ uri: pin.image }}
+          source={{ uri: imageUri }}
           style={[styles.image, { aspectRatio: ration }]}
         />
         <Text style={styles.title}>{pin.title}</Text>
