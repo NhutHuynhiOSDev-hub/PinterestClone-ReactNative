@@ -3,6 +3,7 @@ import {
   View,
   StyleSheet,
   useWindowDimensions,
+  RefreshControl,
 } from "react-native";
 import Pin from "./Pin";
 
@@ -12,14 +13,25 @@ interface IMasonryList {
     image: string;
     title: string;
   }[];
+  refreshing: boolean;
+  onRefesh?: () => void;
 }
 
-const MasonryList = ({ pins }: IMasonryList) => {
+const MasonryList = ({
+  pins,
+  refreshing = false,
+  onRefesh = () => {},
+}: IMasonryList) => {
   const width = useWindowDimensions().width;
   const numRows = Math.ceil(width / 350);
 
   return (
-    <ScrollView contentContainerStyle={{ width: "100%" }}>
+    <ScrollView
+      contentContainerStyle={{ width: "100%" }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefesh} />
+      }
+    >
       <View style={styles.container}>
         {Array.from(Array(numRows)).map((col, colIndex) => (
           <View style={styles.column} key={`colunm_${colIndex}`}>
