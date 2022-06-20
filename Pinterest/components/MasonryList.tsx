@@ -26,12 +26,9 @@ const MasonryList = ({
   const numRows = Math.ceil(width / 350);
 
   return (
-    <ScrollView
-      contentContainerStyle={{ width: "100%" }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefesh} />
-      }
-    >
+    <ScrollView contentContainerStyle={{ width: "100%" }} refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefesh}/>
+    }>
       <View style={styles.container}>
         {Array.from(Array(numRows)).map((col, colIndex) => (
           <View style={styles.column} key={`colunm_${colIndex}`}>
