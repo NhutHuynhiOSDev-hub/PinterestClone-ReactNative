@@ -5,14 +5,53 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import pins from "../assets/data/pins";
 import MasonryList from "../components/MasonryList";
 import { Entypo, Feather } from "@expo/vector-icons";
-import { useSignOut } from "@nhost/react";
+import { useNhostClient, useSignOut, useUserId } from "@nhost/react";
+import { useEffect, useState } from "react";
+
+const FETCH_USER_PROFILE = `query MyQuery($id: uuid!) {
+  user(id: $id) {
+    avatarUrl
+    displayName
+    id
+    pins {
+      id
+      image
+      title
+      create_at
+    }
+  }
+}`;
 
 export default function ProfileScreen() {
+  const [user, setUser] = useState();
   const { signOut } = useSignOut();
+  const nhost = useNhostClient();
+  const userId = useUserId();
+
+  useEffect(() => {
+    fectchUserData();
+  });
+
+  const fectchUserData = async () => {
+    const results = await nhost.graphql.request(FETCH_USER_PROFILE, {
+      id: userId,
+    });
+    if (results.error) {
+      Alert.alert("FETCHING USER DATA ERROR", results.error);
+    }
+
+    setUser(results.data.user);
+  };
+
+  if (!user) {
+    return <ActivityIndicator size="large" color="#000" />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -26,13 +65,13 @@ export default function ProfileScreen() {
         <Image
           style={styles.image}
           source={{
-            uri: "https://scontent.fsgn2-2.fna.fbcdn.net/v/t39.30808-1/285271929_3158985987656526_7456455269640217934_n.jpg?stp=dst-jpg_p320x320&_nc_cat=103&ccb=1-7&_nc_sid=7206a8&_nc_ohc=AuNajH2aXj4AX-MkT1k&tn=N8PnxO-xbx8x54gk&_nc_ht=scontent.fsgn2-2.fna&oh=00_AT8bgUDdtdE1G2W7WvJMDizmr1pffdNsiJiq08pcStVLFQ&oe=62AC87C6",
+            uri: "https://i.pinimg.com/236x/05/49/9b/05499b2fc2bb3512e4dae7bf7b89eaaf.jpg",
           }}
         />
-        <Text style={styles.title}>Nhut Huynh</Text>
+        <Text style={styles.title}>{user.displayName}</Text>
         <Text style={styles.subTitle}>1m2 followers | 100 following</Text>
       </View>
-      <MasonryList pins={pins} />
+      <MasonryList pins={user.pins} onRefesh={fectchUserData} />
     </ScrollView>
   );
 }
