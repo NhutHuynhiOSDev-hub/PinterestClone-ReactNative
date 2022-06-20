@@ -1,15 +1,32 @@
-import { Image, View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import pins from "../assets/data/pins";
 import MasonryList from "../components/MasonryList";
+import { Entypo, Feather } from "@expo/vector-icons";
+import { useSignOut } from "@nhost/react";
 
 export default function ProfileScreen() {
+  const { signOut } = useSignOut();
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+        <View style={styles.icons}>
+          <Pressable onPress={signOut}>
+            <Feather style={styles.icon} size={24} name="log-out" />
+          </Pressable>
+          <Entypo style={styles.icon} size={24} name="dots-three-horizontal" />
+        </View>
         <Image
           style={styles.image}
           source={{
-            uri: "https://scontent.fsgn2-1.fna.fbcdn.net/v/t39.30808-6/273475343_3071556469732812_1474996566542367421_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=RzIa426dCDgAX_cYGxQ&_nc_ht=scontent.fsgn2-1.fna&oh=00_AT_I5uelEr_4ZPbjqGmfJYzEAWm2jeNEUvqZ7TJJohEzWQ&oe=6265B3FC",
+            uri: "https://scontent.fhan4-2.fna.fbcdn.net/v/t39.30808-1/278896020_3124338924454566_5678278125694287454_n.jpg?stp=dst-jpg_p160x160&_nc_cat=111&ccb=1-6&_nc_sid=7206a8&_nc_ohc=YCNBNleQQ74AX9VoYkO&_nc_ht=scontent.fhan4-2.fna&oh=00_AT9V-ION3guaIuwC77i8yP0qpDdAIi2EsYX_9dNNwHLozQ&oe=62849ED9",
           }}
         />
         <Text style={styles.title}>Nhut Huynh</Text>
@@ -23,6 +40,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    backgroundColor: "white",
   },
   title: {
     marginTop: 20,
@@ -32,7 +50,7 @@ const styles = StyleSheet.create({
   subTitle: {
     color: "#181818",
     fontWeight: "600",
-    marginVertical: 10,
+    marginTop: 10,
   },
   image: {
     width: 200,
@@ -41,5 +59,14 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
+    marginVertical: 20,
+  },
+  icons: {
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    padding: 10,
+  },
+  icon: {
+    paddingHorizontal: 10,
   },
 });

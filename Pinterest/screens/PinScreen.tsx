@@ -27,6 +27,8 @@ const PinScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
+  const pinId = route.params?.id;
+
   const GET_PIN_QUEY = `
     query MyQuery ($id: uuid!){
       pins_by_pk(id: $id) {
@@ -41,8 +43,6 @@ const PinScreen = () => {
           }
         }
       }`;
-
-  const pinId = route.params?.id;
 
   const fecthPin = async () => {
     const response = await nhost.graphql.request(GET_PIN_QUEY, { id: pinId });

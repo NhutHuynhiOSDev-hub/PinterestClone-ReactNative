@@ -10,13 +10,14 @@ import {
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-declare global { 
+declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
   }
 }
 
 export type RootStackParamList = {
+  Auth: undefined;
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Pin: undefined;
   Modal: undefined;
