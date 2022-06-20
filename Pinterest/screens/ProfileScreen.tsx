@@ -26,7 +26,7 @@ export default function ProfileScreen() {
         <Image
           style={styles.image}
           source={{
-            uri: "https://scontent.fhan4-2.fna.fbcdn.net/v/t39.30808-1/278896020_3124338924454566_5678278125694287454_n.jpg?stp=dst-jpg_p160x160&_nc_cat=111&ccb=1-6&_nc_sid=7206a8&_nc_ohc=YCNBNleQQ74AX9VoYkO&_nc_ht=scontent.fhan4-2.fna&oh=00_AT9V-ION3guaIuwC77i8yP0qpDdAIi2EsYX_9dNNwHLozQ&oe=62849ED9",
+            uri: "https://scontent.fsgn2-2.fna.fbcdn.net/v/t39.30808-1/285271929_3158985987656526_7456455269640217934_n.jpg?stp=dst-jpg_p320x320&_nc_cat=103&ccb=1-7&_nc_sid=7206a8&_nc_ohc=AuNajH2aXj4AX-MkT1k&tn=N8PnxO-xbx8x54gk&_nc_ht=scontent.fsgn2-2.fna&oh=00_AT8bgUDdtdE1G2W7WvJMDizmr1pffdNsiJiq08pcStVLFQ&oe=62AC87C6",
           }}
         />
         <Text style={styles.title}>Nhut Huynh</Text>

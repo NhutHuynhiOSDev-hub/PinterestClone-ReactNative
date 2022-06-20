@@ -4,16 +4,80 @@ import {
   Image,
   View,
   StyleSheet,
-  Platform,
   TextInput,
+  Alert,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useNhostClient } from "@nhost/react";
+import { useNavigation } from "@react-navigation/native";
+
+const CREATE_PIN_MUTATION = `
+mutation MyMutation($image: String!, $title: String) {
+  insert_pins(objects: {image: $image, title: $title}) {
+    returning {
+      id
+      image
+      title
+      create_at
+      user_id
+    }
+  }
+}
+`;
 
 export default function CreatePinScreen() {
-  const [image, setImage] = useState(null);
+  const [imageUri, setImageUri] = useState<null | string>(null);
   const [title, setTitle] = useState("");
 
-  const onSubmit = () => {};
+  const nhost = useNhostClient();
+  const navigator = useNavigation();
+
+  const onUploadImage = async () => {
+    if (!imageUri) {
+      return {
+        error: {
+          message: "No image selected",
+        },
+      };
+    }
+
+    const parts = imageUri.split("/");
+    const name = parts[parts.length - 1];
+    const nameParts = name.split(".");
+    const extension = nameParts[name.length - 1];
+    const uri =
+      Platform.OS === "ios" ? imageUri.replace("file://", "") : imageUri;
+
+    const results = await nhost.storage.upload({
+      file: {
+        name,
+        type: `image/${extension}`,
+        uri,
+      },
+    });
+    return results;
+  };
+
+  const onSubmit = async () => {
+    const uploadResults = await onUploadImage();
+
+    if (uploadResults.error) {
+      Alert.alert("Error uploading the image", uploadResults.error.message);
+      return;
+    }
+
+    const result = await nhost.graphql.request(CREATE_PIN_MUTATION, {
+      title,
+      image: uploadResults.fileMetadata.id,
+    });
+    console.log(result);
+    if (result.error) {
+      Alert.alert("Error creating the post", result.error.message);
+    } else {
+      navigator.goBack();
+    }
+  };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -23,26 +87,24 @@ export default function CreatePinScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImageUri(result.uri);
     }
   };
 
   return (
     <View style={styles.container}>
       <Button title="Upload you Pin" onPress={pickImage} />
-      {image && (
+      {imageUri && (
         <>
-          <Image source={{ uri: image }} style={styles.image} />
+          <Image source={{ uri: imageUri }} style={styles.image} />
           <TextInput
             style={styles.textInput}
             placeholder="Title..."
             value={title}
             onChangeText={setTitle}
           />
-          <Button title="Submit" onPress={onsubmit } />
+          <Button title="Submit Pin" onPress={onSubmit} />
         </>
       )}
     </View>

@@ -17,9 +17,9 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useNhostClient } from "@nhost/react";
+import RemoteImage from "../components/RemoteImage";
 
 const PinScreen = () => {
-  const [ration, setRation] = useState(1);
   const [pin, setPin] = useState<any>(null);
 
   const route = useRoute();
@@ -44,6 +44,10 @@ const PinScreen = () => {
         }
       }`;
 
+  useEffect(() => {
+    fecthPin();
+  }, [pinId]);
+
   const fecthPin = async () => {
     const response = await nhost.graphql.request(GET_PIN_QUEY, { id: pinId });
     console.log("Pin Details", response);
@@ -53,18 +57,6 @@ const PinScreen = () => {
       setPin(response.data.pins_by_pk);
     }
   };
-
-  useEffect(() => {
-    fecthPin();
-  }, []);
-
-  useEffect(() => {
-    if (pin?.image) {
-      Image.getSize(pin.image, (width, height) => {
-        setRation(width / height);
-      });
-    }
-  }, [pin]);
 
   const goBack = () => {
     navigation.goBack();
@@ -78,10 +70,7 @@ const PinScreen = () => {
     <SafeAreaView style={{ backgroundColor: "black" }}>
       <StatusBar style="light" />
       <View style={styles.root}>
-        <Image
-          source={{ uri: pin.image }}
-          style={[styles.image, { aspectRatio: ration }]}
-        />
+        <RemoteImage fileId={pin.image} />
         <Text style={styles.title}>{pin.title}</Text>
       </View>
       <Pressable
@@ -97,12 +86,6 @@ const PinScreen = () => {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    backgroundColor: "white",
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-  },
-  image: {
-    width: "100%",
     backgroundColor: "white",
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
